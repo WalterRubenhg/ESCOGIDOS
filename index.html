@@ -130,9 +130,13 @@ function actualizarLista(){
 
 // --- Detalle canción ---
 function mostrarDetalle(c){
-    pantallaPrincipal.style.display="none"; detalleDiv.style.display="block";
-    document.getElementById("tituloCancion").textContent=c.titulo;
-    document.getElementById("letraCancion").textContent=c.letra;
+    // Ocultar todo lo demás
+    pantallaPrincipal.style.display = "none";
+    repertorioDiv.style.display = "none"; // <-- ocultamos repertorio también
+    detalleDiv.style.display = "block";
+
+    document.getElementById("tituloCancion").textContent = c.titulo;
+    document.getElementById("letraCancion").textContent = c.letra;
 
     document.querySelectorAll(".tutorialBtn").forEach(btn=>{
         btn.onclick=()=>{
@@ -142,7 +146,10 @@ function mostrarDetalle(c){
             else if(instr==="bateria") url=c.tutorial?.bateria||"";
             else if(instr==="guitarra") url=c.tutorial?.guitarra||"";
             else if(instr==="audio") url=c.audio||"";
-            if(url){ document.getElementById("iframeModal").src=url; document.getElementById("modal").style.display="block";}
+            if(url){ 
+                document.getElementById("iframeModal").src = url; 
+                document.getElementById("modal").style.display = "block";
+            }
         };
     });
 }
