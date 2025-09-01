@@ -4,165 +4,44 @@
 <meta charset="UTF-8">
 <title>Cancionero Web</title>
 <style>
-body { 
-    font-family: 'Arial', sans-serif; 
-    text-align:center; 
-    background:#f5f5f5; 
-    margin:0; 
-    padding-bottom: 50px;
-}
-h1 { 
-    color:#2c3e50; 
-    margin:20px; 
-    font-size:2rem;
-}
-#buscador { 
-    margin:10px auto; 
-    padding:10px; 
-    width:90%; 
-    max-width:500px; 
-    font-size:16px; 
-    border-radius:8px; 
-    border:1px solid #ccc; 
-}
-.cancion { 
-    background:white; 
-    margin:10px auto; 
-    padding:15px; 
-    border-radius:10px; 
-    width:90%; 
-    max-width:500px;
-    cursor:pointer; 
-    box-shadow:0 4px 10px rgba(0,0,0,0.15); 
-    transition:0.3s; 
-}
-.cancion:hover { 
-    background:#eaf4ff; 
-    transform: translateY(-2px);
-}
-.titulo { 
-    font-size:1.2rem; 
-    font-weight:bold; 
-    color:#2980b9; 
-}
-.letra { 
-    white-space: pre-wrap; 
-    font-weight:bold; 
-    font-size:1.1rem; 
-    line-height:1.6; 
-    text-align:center; 
-    margin-top:20px; 
-}
-#detalle, #repertorio { 
-    display:none; 
-    padding:20px; 
-}
-#volver, #guardarRepertorio, #volverRepertorio, #exportarPDF { 
-    margin-top:20px; 
-    padding:10px 25px; 
-    font-size:1rem; 
-    border:none; 
-    border-radius:10px; 
-    background:#2980b9; 
-    color:white; 
-    cursor:pointer; 
-    transition:0.3s;
-}
-#volver:hover, #guardarRepertorio:hover, #volverRepertorio:hover, #exportarPDF:hover { 
-    background:#1a5f91; 
-}
-.botonTutorial { 
-    margin:5px; 
-    padding:10px 20px; 
-    font-size:1rem; 
-    border-radius:10px; 
-    border:none; 
-    cursor:pointer; 
-    background:#e67e22; 
-    color:white; 
-    transition:0.3s;
-}
-.botonTutorial:hover { 
-    background:#d35400; 
-}
-#repertorioLista { 
-    margin-top:15px; 
-    text-align:left; 
-    max-width:90%; 
-    margin-left:auto; 
-    margin-right:auto; 
-    background:#f0f8ff; 
-    border-radius:10px; 
-    padding:10px; 
-    box-shadow:0 3px 6px rgba(0,0,0,0.1);
-}
-.notificacion { 
-    background:#27ae60; 
-    color:white; 
-    padding:10px; 
-    border-radius:8px; 
-    margin:10px auto; 
-    width:90%; 
-    max-width:400px; 
-    display:none; 
-    box-shadow:0 3px 6px rgba(0,0,0,0.1);
-}
+/* --- Estilos mejorados --- */
+body { font-family: 'Arial', sans-serif; text-align:center; background:#f5f5f5; margin:0; padding-bottom: 50px; }
+h1 { color:#2c3e50; margin:20px; font-size:2rem; }
+#buscador { margin:10px auto; padding:10px; width:90%; max-width:500px; font-size:16px; border-radius:8px; border:1px solid #ccc; }
+.cancion { background:white; margin:10px auto; padding:15px; border-radius:10px; width:90%; max-width:500px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:0.3s; }
+.cancion:hover { background:#eaf4ff; transform: translateY(-2px);}
+.titulo { font-size:1.2rem; font-weight:bold; color:#2980b9; }
+.letra { white-space: pre-wrap; font-weight:bold; font-size:1.1rem; line-height:1.6; text-align:center; margin-top:20px; }
+#detalle, #repertorio { display:none; padding:20px; }
+#volver, #guardarRepertorio, #volverRepertorio, #exportarPDF { margin-top:20px; padding:10px 25px; font-size:1rem; border:none; border-radius:10px; background:#2980b9; color:white; cursor:pointer; transition:0.3s;}
+#volver:hover, #guardarRepertorio:hover, #volverRepertorio:hover, #exportarPDF:hover { background:#1a5f91; }
+.botonTutorial { margin:5px; padding:10px 20px; font-size:1rem; border-radius:10px; border:none; cursor:pointer; background:#e67e22; color:white; transition:0.3s;}
+.botonTutorial:hover { background:#d35400; }
+#repertorioLista { margin-top:15px; text-align:left; max-width:90%; margin-left:auto; margin-right:auto; background:#f0f8ff; border-radius:10px; padding:10px; box-shadow:0 3px 6px rgba(0,0,0,0.1);}
+.notificacion { background:#27ae60; color:white; padding:10px; border-radius:8px; margin:10px auto; width:90%; max-width:400px; display:none; box-shadow:0 3px 6px rgba(0,0,0,0.1); }
 
 /* Modal */
-.modal { 
-    display:none; 
-    position:fixed; 
-    z-index:999; 
-    left:0; 
-    top:0; 
-    width:100%; 
-    height:100%; 
-    overflow:auto; 
-    background-color:rgba(0,0,0,0.7); 
-}
-.modal-content { 
-    background-color:#fefefe; 
-    margin:10% auto; 
-    padding:0; 
-    border-radius:10px; 
-    width:90%; 
-    max-width:800px; 
-    position:relative; 
-}
-.modal iframe { 
-    width:100%; 
-    height:400px; 
-    border:none; 
-    border-radius:10px 10px 0 0; 
-}
-.close { 
-    color:white; 
-    position:absolute; 
-    top:10px; 
-    right:20px; 
-    font-size:30px; 
-    font-weight:bold; 
-    cursor:pointer; 
-}
-.close:hover { 
-    color:#ccc; 
-}
+.modal { display:none; position:fixed; z-index:999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.7);}
+.modal-content { background-color:#fefefe; margin:10% auto; padding:0; border-radius:10px; width:90%; max-width:800px; position:relative;}
+.modal iframe { width:100%; height:400px; border:none; border-radius:10px 10px 0 0;}
+.close { color:white; position:absolute; top:10px; right:20px; font-size:30px; font-weight:bold; cursor:pointer;}
+.close:hover { color:#ccc; }
 
 /* Responsive */
 @media (max-width: 600px){
     .botonTutorial, #volver, #guardarRepertorio, #volverRepertorio, #exportarPDF { width:80%; margin:5px auto; }
     .letra { font-size:1rem; }
     .titulo { font-size:1rem; }
+    #buscador { font-size:14px; }
+    .cancion { padding:10px; }
 }
 </style>
-
-<!-- Librería jsPDF para exportar PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
-<h1>📖 Cancionero </h1>
-<div class="notificacion" id="notificacion">¡Hay canciones nuevas disponibles!</div>
+<h1>📖 Cancionero</h1>
+<div class="notificacion" id="notificacion"></div>
 <input type="text" id="buscador" placeholder="🔎 Buscar canción...">
 <div id="lista"></div>
 
@@ -200,52 +79,53 @@ h1 {
 </div>
 
 <script>
-let canciones=[], listaFiltrada=[];
-let repertorios = JSON.parse(localStorage.getItem("repertoriosDomingos")) || {
-    domingo1: [],
-    domingo2: [],
-    domingo3: []
-};
+let canciones = [], listaFiltrada = [];
+let repertorios = JSON.parse(localStorage.getItem("repertoriosDomingos")) || {domingo1: [], domingo2: [], domingo3: []};
 let domingoActual = "domingo1";
 
 const URL_JSON = "https://cdn.jsdelivr.net/gh/walterrubenhg/ESCOGIDOS/canciones.json?nocache=" + Date.now();
 
-function mostrarNotificacion() {
+function mostrarNotificacion(msg) {
     const n = document.getElementById("notificacion");
+    n.textContent = msg;
     n.style.display = "block";
-    setTimeout(() => n.style.display = "none", 4000);
+    setTimeout(() => n.style.display = "none", 3000);
 }
 
-// Cargar canciones y comparar con localStorage
+// Cargar canciones
 fetch(URL_JSON)
-.then(res => res.json())
+.then(res => {
+    if(!res.ok) throw new Error("Error al cargar JSON");
+    return res.json();
+})
 .then(data => {
     let guardadas = localStorage.getItem("canciones");
     if(!guardadas || JSON.stringify(JSON.parse(guardadas)) !== JSON.stringify(data.canciones)){
         canciones = data.canciones;
         localStorage.setItem("canciones", JSON.stringify(data.canciones));
-        mostrarNotificacion();
+        mostrarNotificacion("¡Hay canciones nuevas disponibles!");
     } else {
         canciones = JSON.parse(guardadas);
     }
     actualizarLista();
 })
-.catch(() => {
+.catch(err => {
+    console.error(err);
     let guardadas = localStorage.getItem("canciones");
     canciones = guardadas ? JSON.parse(guardadas) : [];
     actualizarLista();
 });
 
 function actualizarLista(){
-    const texto=document.getElementById("buscador").value.toLowerCase();
-    listaFiltrada=canciones.filter(c => c.titulo.toLowerCase().includes(texto) || c.letra.toLowerCase().includes(texto));
+    const texto = document.getElementById("buscador").value.toLowerCase();
+    listaFiltrada = canciones.filter(c => c.titulo.toLowerCase().includes(texto) || c.letra.toLowerCase().includes(texto));
     listaFiltrada.sort((a,b) => a.titulo.localeCompare(b.titulo));
-    const cont=document.getElementById("lista");
-    cont.innerHTML="";
-    listaFiltrada.forEach(c=>{
-        const div=document.createElement("div");
-        div.className="cancion";
-        div.innerHTML=`<div class="titulo">${c.titulo}</div>`;
+    const cont = document.getElementById("lista");
+    cont.innerHTML = "";
+    listaFiltrada.forEach(c => {
+        const div = document.createElement("div");
+        div.className = "cancion";
+        div.innerHTML = `<div class="titulo">${c.titulo}</div>`;
         div.onclick = () => mostrarDetalle(c);
         div.oncontextmenu = (e) => { e.preventDefault(); agregarAlRepertorio(c); };
         cont.appendChild(div);
@@ -256,17 +136,17 @@ function mostrarDetalle(c){
     document.getElementById("lista").style.display="none";
     document.getElementById("buscador").style.display="none";
     document.getElementById("detalle").style.display="block";
-    document.getElementById("tituloCancion").textContent=c.titulo;
-    document.getElementById("letraCancion").textContent=c.letra;
+    document.getElementById("tituloCancion").textContent = c.titulo;
+    document.getElementById("letraCancion").textContent = c.letra;
 
-    const modal=document.getElementById("modal");
-    const iframe=document.getElementById("iframeModal");
-    const close=document.getElementsByClassName("close")[0];
+    const modal = document.getElementById("modal");
+    const iframe = document.getElementById("iframeModal");
+    const close = document.getElementsByClassName("close")[0];
 
-    document.getElementById("btnTeclado").onclick = () => { iframe.src=c.tutorial.teclado; modal.style.display="block"; };
-    document.getElementById("btnBateria").onclick = () => { iframe.src=c.tutorial.bateria; modal.style.display="block"; };
-    document.getElementById("btnGuitarra").onclick = () => { iframe.src=c.tutorial.guitarra; modal.style.display="block"; };
-    document.getElementById("btnMusica").onclick = () => { iframe.src=c.audio; modal.style.display="block"; };
+    if(c.tutorial && c.tutorial.teclado) document.getElementById("btnTeclado").onclick = () => { iframe.src = c.tutorial.teclado; modal.style.display = "block"; };
+    if(c.tutorial && c.tutorial.bateria) document.getElementById("btnBateria").onclick = () => { iframe.src = c.tutorial.bateria; modal.style.display = "block"; };
+    if(c.tutorial && c.tutorial.guitarra) document.getElementById("btnGuitarra").onclick = () => { iframe.src = c.tutorial.guitarra; modal.style.display = "block"; };
+    if(c.audio) document.getElementById("btnMusica").onclick = () => { iframe.src = c.audio; modal.style.display = "block"; };
 
     close.onclick = () => { iframe.src=""; modal.style.display="none"; };
     window.onclick = (event) => { if(event.target == modal){ iframe.src=""; modal.style.display="none"; } };
@@ -278,20 +158,16 @@ document.getElementById("volver").onclick = () => {
     document.getElementById("buscador").style.display="inline-block";
 };
 
-// --- Repertorios ---
 const selectDomingo = document.getElementById("selectDomingo");
-selectDomingo.onchange = () => {
-    domingoActual = selectDomingo.value;
-    mostrarRepertorio();
-};
+selectDomingo.onchange = () => { domingoActual = selectDomingo.value; mostrarRepertorio(); };
 
 function agregarAlRepertorio(c){
     if(!repertorios[domingoActual].includes(c.titulo)){
         repertorios[domingoActual].push(c.titulo);
         mostrarRepertorio();
-        alert(`"${c.titulo}" agregado al ${domingoActual}`);
+        mostrarNotificacion(`"${c.titulo}" agregado al ${domingoActual}`);
     } else {
-        alert(`"${c.titulo}" ya está en el ${domingoActual}`);
+        mostrarNotificacion(`"${c.titulo}" ya está en el ${domingoActual}`);
     }
 }
 
@@ -306,27 +182,21 @@ function mostrarRepertorio(){
 
 document.getElementById("guardarRepertorio").onclick = () => {
     localStorage.setItem("repertoriosDomingos", JSON.stringify(repertorios));
-    alert(`Repertorio guardado para ${domingoActual}!`);
+    mostrarNotificacion(`Repertorio guardado para ${domingoActual}!`);
 };
 
 document.getElementById("exportarPDF").onclick = () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-
     doc.setFontSize(18);
     doc.text("Repertorio " + domingoActual, 105, 20, null, null, "center");
-
     doc.setFontSize(12);
     let y = 30;
-    repertorios[domingoActual].forEach((titulo, i) => {
-        doc.text(`${i + 1}. ${titulo}`, 20, y);
+    repertorios[domingoActual].forEach((titulo,i) => {
+        doc.text(`${i+1}. ${titulo}`, 20, y);
         y += 10;
-        if(y > 280){
-            doc.addPage();
-            y = 20;
-        }
+        if(y>280){ doc.addPage(); y=20; }
     });
-
     doc.save(`Repertorio_${domingoActual}.pdf`);
 };
 
@@ -336,9 +206,9 @@ document.getElementById("volverRepertorio").onclick = () => {
     document.getElementById("buscador").style.display="inline-block";
 };
 
-// Cargar repertorio al iniciar
-mostrarRepertorio();
 document.getElementById("buscador").addEventListener("input", actualizarLista);
+actualizarLista(); // mostrar la lista al inicio
 </script>
 </body>
 </html>
+
