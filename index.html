@@ -7,9 +7,9 @@
 body { font-family: 'Arial', sans-serif; text-align:center; background:#f5f5f5; margin:0; padding-bottom:50px; }
 h1 { color:#2c3e50; margin:20px; font-size:2rem; }
 #buscador { margin:10px auto; padding:10px; width:90%; max-width:500px; font-size:16px; border-radius:8px; border:1px solid #ccc; }
-.cancion { background:white; margin:10px auto; padding:15px; border-radius:10px; width:90%; max-width:500px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:0.3s; }
+.cancion { background:white; margin:10px auto; padding:15px; border-radius:10px; width:90%; max-width:500px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:0.3s; display:flex; justify-content:space-between; align-items:center; }
 .cancion:hover { background:#eaf4ff; transform: translateY(-2px);}
-.titulo { font-size:1.2rem; font-weight:bold; color:#2980b9; }
+.titulo { font-size:1.2rem; font-weight:bold; color:#2980b9; cursor:pointer; }
 .letra { white-space: pre-wrap; font-weight:bold; font-size:1.1rem; line-height:1.6; text-align:center; margin-top:20px; }
 #detalle, #repertorio { display:none; padding:20px; }
 button { margin-top:10px; padding:10px 20px; border:none; border-radius:10px; cursor:pointer; background:#2980b9; color:white; transition:0.3s;}
@@ -92,8 +92,38 @@ function actualizarLista(){
     listaDiv.innerHTML="";
     listaFiltrada.forEach(c=>{
         const div = document.createElement("div");
-        div.className="cancion"; div.textContent=c.titulo;
-        div.onclick=()=>mostrarDetalle(c);
+        div.className="cancion";
+
+        const tituloDiv = document.createElement("span");
+        tituloDiv.textContent = c.titulo;
+        tituloDiv.className="titulo";
+        tituloDiv.onclick=()=>mostrarDetalle(c);
+        div.appendChild(tituloDiv);
+
+        // Select para agregar al repertorio
+        const selectRep = document.createElement("select");
+        const defaultOpt = document.createElement("option");
+        defaultOpt.textContent = "+ Repertorio";
+        defaultOpt.value = "";
+        selectRep.appendChild(defaultOpt);
+
+        for(let r in repertorios){
+            const opt = document.createElement("option");
+            opt.value = r; opt.textContent = r;
+            selectRep.appendChild(opt);
+        }
+
+        selectRep.onchange = ()=>{
+            const repNombre = selectRep.value;
+            if(!repNombre) return;
+            if(repertorios[repNombre].includes(c.titulo)) return mostrarNotificacion("La canción ya está en ese repertorio");
+            repertorios[repNombre].push(c.titulo);
+            guardarRepertorios();
+            mostrarNotificacion(`"${c.titulo}" agregado a ${repNombre}`);
+            selectRep.value = ""; // reset
+        };
+
+        div.appendChild(selectRep);
         listaDiv.appendChild(div);
     });
 }
@@ -185,4 +215,3 @@ document.getElementById("buscador").addEventListener("input", actualizarLista);
 </script>
 </body>
 </html>
-
