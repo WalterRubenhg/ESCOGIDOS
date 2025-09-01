@@ -14,6 +14,8 @@ h1 { color:#2c3e50; margin:20px; font-size:2rem; }
 #detalle, #repertorio { display:none; padding:20px; }
 button { margin-top:10px; padding:10px 20px; border:none; border-radius:10px; cursor:pointer; background:#2980b9; color:white; transition:0.3s;}
 button:hover { background:#1a5f91; }
+.eliminarCancion { background:#e74c3c; margin-left:10px; }
+.eliminarCancion:hover { background:#c0392b; }
 #repertorioLista, #lista { margin-top:15px; text-align:left; max-width:90%; margin-left:auto; margin-right:auto;}
 .notificacion { background:#27ae60; color:white; padding:10px; border-radius:8px; margin:10px auto; width:90%; max-width:400px; display:none; box-shadow:0 3px 6px rgba(0,0,0,0.1);}
 input, select { padding:8px 10px; border-radius:6px; border:1px solid #ccc; margin:5px;}
@@ -67,7 +69,7 @@ input, select { padding:8px 10px; border-radius:6px; border:1px solid #ccc; marg
 let canciones=[], listaFiltrada=[];
 let repertorios = JSON.parse(localStorage.getItem("repertorios")) || {};
 let repertorioActual = null;
-let origenDetalle = "principal"; // origen de la vista detalle
+let origenDetalle = "principal";
 
 const URL_JSON = "https://cdn.jsdelivr.net/gh/walterrubenhg/ESCOGIDOS/canciones.json?nocache=" + Date.now();
 const pantallaPrincipal = document.getElementById("pantallaPrincipal");
@@ -158,7 +160,7 @@ document.getElementById("cerrarModal").onclick=()=>{
 document.getElementById("volver").onclick = () => {
     detalleDiv.style.display = "none";
     if(origenDetalle==="principal"){
-        pantallaPrincipal.style.display="block";
+        pantallaPrincipal.style.display = "block";
         actualizarLista();
     } else if(origenDetalle==="repertorio"){
         mostrarRepertorio();
@@ -193,11 +195,20 @@ function mostrarRepertorio(){
     const cont=document.getElementById("repertorioLista"); cont.innerHTML="";
     if(!repertorioActual) { cont.innerHTML="Selecciona un repertorio"; return;}
     repertorios[repertorioActual].forEach((titulo,i)=>{
-        const div=document.createElement("div"); div.className="cancion"; div.textContent=titulo;
-        div.onclick=()=>{
-            const c = canciones.find(x=>x.titulo===titulo);
-            if(c) mostrarDetalle(c, "repertorio");
+        const div=document.createElement("div"); div.className="cancion"; 
+        const tituloSpan = document.createElement("span"); tituloSpan.textContent = titulo; tituloSpan.className="titulo";
+        tituloSpan.onclick=()=>{ const c = canciones.find(x=>x.titulo===titulo); if(c) mostrarDetalle(c,"repertorio"); };
+        div.appendChild(tituloSpan);
+
+        const btnEliminar = document.createElement("button"); btnEliminar.textContent="❌"; btnEliminar.className="eliminarCancion";
+        btnEliminar.onclick=()=>{
+            repertorios[repertorioActual] = repertorios[repertorioActual].filter(t=>t!==titulo);
+            guardarRepertorios();
+            mostrarRepertorio();
+            mostrarNotificacion(`"${titulo}" eliminado de ${repertorioActual}`);
         };
+        div.appendChild(btnEliminar);
+
         cont.appendChild(div);
     });
 }
@@ -221,4 +232,5 @@ document.getElementById("buscador").addEventListener("input", actualizarLista);
 </script>
 </body>
 </html>
+
 
