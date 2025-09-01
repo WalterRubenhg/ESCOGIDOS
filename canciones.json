@@ -1,0 +1,46 @@
+{
+    "version": 3,
+    "canciones": [
+      {
+        "titulo": "Somos el pueblo de Dios",
+        "letra": "Somos el pueblo de Dios\nSomos un pueblo especial\nLlamados para anunciar\nLas virtudes de Aquél\n\nY ser testigos de Él (Danilo Montero)\n\nY llevaremos su gloria\nA cada pueblo y nación\nTrayéndoles esperanza\nY nuevas de salvación\nY su amor nos impulsa\n\nNo nos podemos callar (no nos podemos callar)\nAnunciaremos al mundo\nDe su amor y verdad\n¿Alguien puede decir amén?\nSomos el pueblo de Dios (somos el pueblo)\nSomos un pueblo especial (muy especial)\nLlamados para anunciar\nLas virtudes de Aquel\nQue nos llamó a su luz\nSomos el pueblo de Dios\nSu sangre nos redimió\nY su espíritu dio\nPara darnos poder\nY ser testigos de Él\nCanten con nosotros, llevaremos\nY llevaremos su gloria\nA cada pueblo y nación\nTrayéndoles esperanza\nY nuevas de salvación\nY su amor nos impulsa\nNo nos podemos callar (no nos podemos callar)\nAnunciaremos al mundo\nDe su amor y verdad\nSí, Señor, anunciaremos\nTu amor y tu verdad\nAmén",
+        "tutorial": {
+          "teclado": "https://www.youtube.com/embed/GCnyax1nCPc",
+          "bateria": "https://www.youtube.com/embed/GCnyax1nCPc",
+          "guitarra": "https://www.youtube.com/embed/GCnyax1nCPc"
+        },
+        "audio": "https://www.youtube.com/embed/GCnyax1nCPc"
+      },
+      {
+        "titulo": "Cristo vive en mí",
+        "letra": "Ya no vivo yo,\nmas Cristo vive en mí,\nmi vida es su luz.",
+        "tutorial": {
+          "teclado": "https://www.youtube.com/embed/VIDEO_TECLADO2",
+          "bateria": "https://www.youtube.com/embed/VIDEO_BATERIA2",
+          "guitarra": "https://www.youtube.com/embed/VIDEO_GUITARRA2"
+        },
+        "audio": "https://www.youtube.com/embed/VIDEO_CANCION2"
+      },
+      {
+        "titulo": "Alabaré",
+        "letra": "Alabaré, alabaré, alabaré a mi Señor\nAlabaré, alabaré, alabaré a mi Señor\n\nEn la mañana lo alabaré\nEn la tarde lo alabaré\nEn la noche lo alabaré\nAlabaré a mi Señor",
+        "tutorial": {
+          "teclado": "https://www.youtube.com/embed/VIDEO_TECLADO3",
+          "bateria": "https://www.youtube.com/embed/VIDEO_BATERIA3",
+          "guitarra": "https://www.youtube.com/embed/VIDEO_GUITARRA3"
+        },
+        "audio": "https://www.youtube.com/embed/VIDEO_CANCION3"
+      },
+      {
+        "titulo": "Cristo es mi roca",
+        "letra": "Cristo es mi roca, mi refugio fiel\nNunca me dejará, siempre me sostendrá\n\nEn la tormenta confiaré\nEn su amor descansaré\nSiempre firme estaré\nCristo es mi roca",
+        "tutorial": {
+          "teclado": "https://www.youtube.com/embed/VIDEO_TECLADO4",
+          "bateria": "https://www.youtube.com/embed/VIDEO_BATERIA4",
+          "guitarra": "https://www.youtube.com/embed/VIDEO_GUITARRA4"
+        },
+        "audio": "https://www.youtube.com/embed/VIDEO_CANCION4"
+      }
+    ]
+  }
+  
