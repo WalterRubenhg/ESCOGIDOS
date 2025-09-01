@@ -67,6 +67,7 @@ input, select { padding:8px 10px; border-radius:6px; border:1px solid #ccc; marg
 let canciones=[], listaFiltrada=[];
 let repertorios = JSON.parse(localStorage.getItem("repertorios")) || {};
 let repertorioActual = null;
+let origenDetalle = "principal"; // origen de la vista detalle
 
 const URL_JSON = "https://cdn.jsdelivr.net/gh/walterrubenhg/ESCOGIDOS/canciones.json?nocache=" + Date.now();
 const pantallaPrincipal = document.getElementById("pantallaPrincipal");
@@ -97,22 +98,16 @@ function actualizarLista(){
         const tituloDiv = document.createElement("span");
         tituloDiv.textContent = c.titulo;
         tituloDiv.className="titulo";
-        tituloDiv.onclick=()=>mostrarDetalle(c);
+        tituloDiv.onclick=()=>mostrarDetalle(c, "principal");
         div.appendChild(tituloDiv);
 
-        // Select para agregar al repertorio
         const selectRep = document.createElement("select");
         const defaultOpt = document.createElement("option");
-        defaultOpt.textContent = "+ Repertorio";
-        defaultOpt.value = "";
+        defaultOpt.textContent = "+ Repertorio"; defaultOpt.value="";
         selectRep.appendChild(defaultOpt);
-
         for(let r in repertorios){
-            const opt = document.createElement("option");
-            opt.value = r; opt.textContent = r;
-            selectRep.appendChild(opt);
+            const opt = document.createElement("option"); opt.value=r; opt.textContent=r; selectRep.appendChild(opt);
         }
-
         selectRep.onchange = ()=>{
             const repNombre = selectRep.value;
             if(!repNombre) return;
@@ -120,19 +115,18 @@ function actualizarLista(){
             repertorios[repNombre].push(c.titulo);
             guardarRepertorios();
             mostrarNotificacion(`"${c.titulo}" agregado a ${repNombre}`);
-            selectRep.value = ""; // reset
+            selectRep.value="";
         };
-
         div.appendChild(selectRep);
         listaDiv.appendChild(div);
     });
 }
 
 // --- Detalle canción ---
-function mostrarDetalle(c){
-    // Ocultar todo lo demás
+function mostrarDetalle(c, origen="principal"){
+    origenDetalle = origen;
     pantallaPrincipal.style.display = "none";
-    repertorioDiv.style.display = "none"; // <-- ocultamos repertorio también
+    repertorioDiv.style.display = "none";
     detalleDiv.style.display = "block";
 
     document.getElementById("tituloCancion").textContent = c.titulo;
@@ -161,9 +155,14 @@ document.getElementById("cerrarModal").onclick=()=>{
 };
 
 // --- Volver ---
-document.getElementById("volver").onclick=()=>{
-    detalleDiv.style.display="none"; pantallaPrincipal.style.display="block";
-    actualizarLista();
+document.getElementById("volver").onclick = () => {
+    detalleDiv.style.display = "none";
+    if(origenDetalle==="principal"){
+        pantallaPrincipal.style.display="block";
+        actualizarLista();
+    } else if(origenDetalle==="repertorio"){
+        mostrarRepertorio();
+    }
 };
 
 document.getElementById("volverRepertorio").onclick = ()=>{
@@ -197,7 +196,7 @@ function mostrarRepertorio(){
         const div=document.createElement("div"); div.className="cancion"; div.textContent=titulo;
         div.onclick=()=>{
             const c = canciones.find(x=>x.titulo===titulo);
-            if(c) mostrarDetalle(c);
+            if(c) mostrarDetalle(c, "repertorio");
         };
         cont.appendChild(div);
     });
@@ -222,3 +221,4 @@ document.getElementById("buscador").addEventListener("input", actualizarLista);
 </script>
 </body>
 </html>
+
