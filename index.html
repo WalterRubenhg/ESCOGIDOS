@@ -11,7 +11,7 @@ h1 { color:#2c3e50; margin:20px; font-size:2rem; }
 .cancion:hover { background:#eaf4ff; transform: translateY(-2px);}
 .titulo { font-size:1.2rem; font-weight:bold; color:#2980b9; }
 .letra { white-space: pre-wrap; font-weight:bold; font-size:1.1rem; line-height:1.6; text-align:center; margin-top:20px; }
-#detalle, #repertorio, #pantallaPrincipal { display:none; padding:20px; }
+#detalle, #repertorio { display:none; padding:20px; }
 button { margin-top:10px; padding:10px 20px; border:none; border-radius:10px; cursor:pointer; background:#2980b9; color:white; transition:0.3s;}
 button:hover { background:#1a5f91; }
 #repertorioLista, #lista { margin-top:15px; text-align:left; max-width:90%; margin-left:auto; margin-right:auto;}
@@ -25,7 +25,7 @@ input, select { padding:8px 10px; border-radius:6px; border:1px solid #ccc; marg
 <h1>📖 Cancionero</h1>
 <div class="notificacion" id="notificacion"></div>
 
-<div id="pantallaPrincipal">
+<div id="pantallaPrincipal" style="display:block;">
     <button id="btnCrearRepertorio">Crear Repertorio</button>
     <button id="btnVerRepertorios">Ver Repertorios</button>
     <input type="text" id="buscador" placeholder="🔎 Buscar canción...">
@@ -74,14 +74,17 @@ const listaDiv = document.getElementById("lista");
 const detalleDiv = document.getElementById("detalle");
 const repertorioDiv = document.getElementById("repertorio");
 
-// --- Funciones básicas ---
+// --- Funciones ---
 function mostrarNotificacion(msg){
     const n = document.getElementById("notificacion");
     n.textContent = msg; n.style.display="block";
     setTimeout(()=>n.style.display="none",3000);
 }
 
-function guardarRepertorios(){ localStorage.setItem("repertorios",JSON.stringify(repertorios)); actualizarSelectMisRepertorios(); }
+function guardarRepertorios(){ 
+    localStorage.setItem("repertorios",JSON.stringify(repertorios)); 
+    actualizarSelectMisRepertorios(); 
+}
 
 function actualizarLista(){
     const texto=document.getElementById("buscador").value.toLowerCase();
@@ -123,6 +126,12 @@ document.getElementById("cerrarModal").onclick=()=>{
 // --- Volver ---
 document.getElementById("volver").onclick=()=>{
     detalleDiv.style.display="none"; pantallaPrincipal.style.display="block";
+    actualizarLista();
+};
+
+document.getElementById("volverRepertorio").onclick = ()=>{
+    repertorioDiv.style.display="none"; pantallaPrincipal.style.display="block";
+    actualizarLista();
 };
 
 // --- Cargar canciones ---
@@ -144,7 +153,7 @@ function actualizarSelectMisRepertorios(){
 }
 
 function mostrarRepertorio(){
-    repertorioDiv.style.display="block"; listaDiv.innerHTML=""; pantallaPrincipal.style.display="none"; detalleDiv.style.display="none";
+    listaDiv.innerHTML=""; pantallaPrincipal.style.display="none"; detalleDiv.style.display="none"; repertorioDiv.style.display="block";
     const cont=document.getElementById("repertorioLista"); cont.innerHTML="";
     if(!repertorioActual) { cont.innerHTML="Selecciona un repertorio"; return;}
     repertorios[repertorioActual].forEach((titulo,i)=>{
@@ -166,10 +175,14 @@ document.getElementById("crearRepertorio").onclick=()=>{
     mostrarNotificacion(`Repertorio "${nombre}" creado`);
 };
 
+// --- Botones principales ---
 document.getElementById("btnCrearRepertorio").onclick=()=>{ repertorioDiv.style.display="block"; pantallaPrincipal.style.display="none"; };
 document.getElementById("btnVerRepertorios").onclick=()=>{
     actualizarSelectMisRepertorios(); repertorioDiv.style.display="block"; pantallaPrincipal.style.display="none";
 };
+
+document.getElementById("buscador").addEventListener("input", actualizarLista);
 </script>
 </body>
 </html>
+
