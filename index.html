@@ -7,13 +7,13 @@
 body {
     font-family: 'Arial', sans-serif;
     text-align: center;
-    background: #111; /* Negro */
-    color: #ffd700;   /* Dorado */
+    background: #111;
+    color: #ffd700;
     margin: 0;
     padding-bottom: 50px;
 }
 h1 {
-    color: #ffa500;  /* Naranja */
+    color: #ffa500;
     font-size: 2.5rem;
     margin: 20px;
     text-shadow: 2px 2px #000;
@@ -208,6 +208,7 @@ function actualizarLista(){
             repertorios[repNombre].push(c.titulo);
             guardarRepertorios();
             mostrarNotificacion(`"${c.titulo}" agregado a ${repNombre}`);
+            if(repertorioActual===repNombre) mostrarRepertorio();
             selectRep.value="";
         };
         div.appendChild(selectRep);
@@ -215,8 +216,9 @@ function actualizarLista(){
     });
 }
 
-function mostrarDetalle(c, origen="principal"){
+function mostrarDetalle(c, origen="principal", rep=null){
     origenDetalle = origen;
+    if(rep) repertorioActual = rep;
     pantallaPrincipal.style.display = "none";
     repertorioDiv.style.display = "none";
     detalleDiv.style.display = "block";
@@ -243,8 +245,11 @@ function mostrarDetalle(c, origen="principal"){
 
 document.getElementById("volver").onclick = ()=>{
     detalleDiv.style.display="none";
-    if(origenDetalle==="repertorio") mostrarRepertorio();
-    else pantallaPrincipal.style.display="block";
+    if(origenDetalle==="repertorio" && repertorioActual){
+        mostrarRepertorio();
+    } else {
+        pantallaPrincipal.style.display="block";
+    }
 };
 
 document.getElementById("cerrarModal").onclick = ()=>{
@@ -254,25 +259,30 @@ document.getElementById("cerrarModal").onclick = ()=>{
 
 document.getElementById("btnCrearRepertorio").onclick = ()=>{
     pantallaPrincipal.style.display="none"; repertorioDiv.style.display="block";
-    document.getElementById("nuevoRepertorio").focus();
+    document.getElementById("nuevoRepertorio").value="";
 };
-
 document.getElementById("btnVerRepertorios").onclick = ()=>{
-    pantallaPrincipal.style.display="none"; repertorioDiv.style.display="block";
+    repertorioActual = Object.keys(repertorios)[0] || null;
+    mostrarRepertorio();
 };
 
 document.getElementById("crearRepertorio").onclick = ()=>{
     const nombre = document.getElementById("nuevoRepertorio").value.trim();
-    if(!nombre) return mostrarNotificacion("Escribe un nombre");
-    if(repertorios[nombre]) return mostrarNotificacion("Ya existe un repertorio con ese nombre");
+    if(!nombre) return;
+    if(repertorios[nombre]) return mostrarNotificacion("Ya existe ese repertorio");
     repertorios[nombre]=[];
     guardarRepertorios();
-    document.getElementById("nuevoRepertorio").value="";
     mostrarNotificacion(`Repertorio "${nombre}" creado`);
 };
 
+document.getElementById("selectMisRepertorios").onchange = ()=>{
+    repertorioActual = document.getElementById("selectMisRepertorios").value;
+    mostrarRepertorio();
+};
+
 document.getElementById("volverRepertorio").onclick = ()=>{
-    repertorioDiv.style.display="none"; pantallaPrincipal.style.display="block";
+    repertorioDiv.style.display="none";
+    pantallaPrincipal.style.display="block";
 };
 
 function mostrarRepertorio(){
@@ -280,7 +290,8 @@ function mostrarRepertorio(){
     repertorioDiv.style.display="block"; pantallaPrincipal.style.display="none";
     const repListaDiv = document.getElementById("repertorioLista");
     repListaDiv.innerHTML="";
-    if(!repertorios[repertorioActual]) return;
+    document.getElementById("selectMisRepertorios").value = repertorioActual;
+
     repertorios[repertorioActual].forEach(titulo=>{
         const c = canciones.find(x=>x.titulo===titulo);
         if(!c) return;
@@ -288,13 +299,14 @@ function mostrarRepertorio(){
         div.className="cancion";
 
         const tituloDiv = document.createElement("span");
-        tituloDiv.textContent=c.titulo; tituloDiv.className="titulo";
-        tituloDiv.onclick=()=>mostrarDetalle(c,"repertorio");
+        tituloDiv.textContent = c.titulo;
+        tituloDiv.className="titulo";
+        tituloDiv.onclick = ()=> mostrarDetalle(c,"repertorio", repertorioActual);
         div.appendChild(tituloDiv);
 
         const btnEliminar = document.createElement("button");
-        btnEliminar.textContent="❌"; btnEliminar.className="eliminarCancion";
-        btnEliminar.onclick=()=>{
+        btnEliminar.textContent = "❌"; btnEliminar.className="eliminarCancion";
+        btnEliminar.onclick = ()=>{
             repertorios[repertorioActual] = repertorios[repertorioActual].filter(x=>x!==c.titulo);
             guardarRepertorios();
             mostrarRepertorio();
@@ -304,28 +316,16 @@ function mostrarRepertorio(){
     });
 }
 
-document.getElementById("selectMisRepertorios").onchange = ()=>{
-    repertorioActual = document.getElementById("selectMisRepertorios").value;
-    mostrarRepertorio();
-};
-
-fetch(URL_JSON)
-.then(res=>res.json())
-.then(data=>{
-    canciones = data.canciones;
+// Cargar canciones desde JSON
+fetch(URL_JSON).then(r=>r.json()).then(data=>{
+    canciones = data.canciones || [];
     actualizarLista();
-})
-.catch(err=>{
-    console.error(err);
-    mostrarNotificacion("Error cargando canciones");
-});
+}).catch(()=>{ canciones=[]; actualizarLista(); });
 
 document.getElementById("buscador").addEventListener("input", actualizarLista);
 actualizarSelectMisRepertorios();
 </script>
-
 </body>
 </html>
-
 
 
