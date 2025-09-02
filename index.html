@@ -204,75 +204,68 @@ function actualizarLista(){
         selectRep.onchange = ()=>{
             const repNombre = selectRep.value;
             if(!repNombre) return;
-            if(repertorios[repNombre].includes(c.titulo)) return mostrarNotificacion("La canción ya está en ese repertorio");
-            repertorios[repNombre].push(c.titulo);
+            if(!repertorios[repNombre]) repertorios[repNombre]=[];
+            if(!repertorios[repNombre].includes(c.titulo)) repertorios[repNombre].push(c.titulo);
             guardarRepertorios();
-            mostrarNotificacion(`"${c.titulo}" agregado a ${repNombre}`);
-            if(repertorioActual===repNombre) mostrarRepertorio();
+            mostrarNotificacion(`"${c.titulo}" agregado a "${repNombre}"`);
             selectRep.value="";
         };
         div.appendChild(selectRep);
+
         listaDiv.appendChild(div);
     });
 }
 
-function mostrarDetalle(c, origen="principal", rep=null){
+function mostrarDetalle(c, origen){
     origenDetalle = origen;
-    if(rep) repertorioActual = rep;
-    pantallaPrincipal.style.display = "none";
-    repertorioDiv.style.display = "none";
-    detalleDiv.style.display = "block";
+    detalleDiv.style.display="block";
+    pantallaPrincipal.style.display="none";
+    repertorioDiv.style.display="none";
 
     document.getElementById("tituloCancion").textContent = c.titulo;
     document.getElementById("letraCancion").textContent = c.letra;
 
-    document.querySelectorAll(".tutorialBtn").forEach(btn => {
-        btn.onclick = () => {
-            let url = "";
-            switch(btn.dataset.instrumento){
-                case "teclado": url = c.tutorial?.teclado || ""; break;
-                case "bateria": url = c.tutorial?.bateria || ""; break;
-                case "guitarra": url = c.tutorial?.guitarra || ""; break;
-                case "audio": url = c.audio || ""; break;
-            }
-            if(url){
-                document.getElementById("iframeModal").src = url;
-                document.getElementById("modal").style.display = "block";
-            }
+    const iframe = document.getElementById("iframeModal");
+    const modal = document.getElementById("modal");
+    const botones = document.querySelectorAll(".tutorialBtn");
+    botones.forEach(btn=>{
+        const instr = btn.dataset.instrumento;
+        btn.onclick = ()=>{
+            iframe.src = c.tutorial?.[instr] || (instr==="audio"?c.audio:"");
+            modal.style.display="block";
         };
     });
 }
 
-document.getElementById("volver").onclick = ()=>{
-    detalleDiv.style.display="none";
-    if(origenDetalle==="repertorio" && repertorioActual){
-        mostrarRepertorio();
-    } else {
-        pantallaPrincipal.style.display="block";
-    }
-};
-
-document.getElementById("cerrarModal").onclick = ()=>{
+document.getElementById("cerrarModal").onclick = ()=>{ 
     document.getElementById("iframeModal").src="";
     document.getElementById("modal").style.display="none";
 };
 
-document.getElementById("btnCrearRepertorio").onclick = ()=>{
-    pantallaPrincipal.style.display="none"; repertorioDiv.style.display="block";
-    document.getElementById("nuevoRepertorio").value="";
+document.getElementById("volver").onclick = ()=>{
+    detalleDiv.style.display="none";
+    if(origenDetalle==="repertorio") mostrarRepertorio();
+    else pantallaPrincipal.style.display="block";
 };
-document.getElementById("btnVerRepertorios").onclick = ()=>{
-    repertorioActual = Object.keys(repertorios)[0] || null;
-    mostrarRepertorio();
+
+document.getElementById("btnCrearRepertorio").onclick = ()=>{
+    pantallaPrincipal.style.display="none";
+    repertorioDiv.style.display="block";
 };
 
 document.getElementById("crearRepertorio").onclick = ()=>{
     const nombre = document.getElementById("nuevoRepertorio").value.trim();
-    if(!nombre) return;
-    if(repertorios[nombre]) return mostrarNotificacion("Ya existe ese repertorio");
+    if(!nombre) return mostrarNotificacion("Escribe un nombre");
+    if(repertorios[nombre]) return mostrarNotificacion("Ya existe");
     repertorios[nombre]=[];
     guardarRepertorios();
     mostrarNotificacion(`Repertorio "${nombre}" creado`);
+    document.getElementById("nuevoRepertorio").value="";
+};
+
+document.getElementById("btnVerRepertorios").onclick = ()=>{
+    repertorioActual = Object.keys(repertorios)[0] || null;
+    mostrarRepertorio();
 };
 
 document.getElementById("selectMisRepertorios").onchange = ()=>{
@@ -288,30 +281,37 @@ document.getElementById("volverRepertorio").onclick = ()=>{
 function mostrarRepertorio(){
     if(!repertorioActual) return;
     repertorioDiv.style.display="block"; pantallaPrincipal.style.display="none";
+    const sel = document.getElementById("selectMisRepertorios");
+    sel.value = repertorioActual;
+
     const repListaDiv = document.getElementById("repertorioLista");
-    repListaDiv.innerHTML="";
-    document.getElementById("selectMisRepertorios").value = repertorioActual;
+    repListaDiv.innerHTML = "";
+
+    if(!repertorios[repertorioActual]) repertorios[repertorioActual]=[];
 
     repertorios[repertorioActual].forEach(titulo=>{
         const c = canciones.find(x=>x.titulo===titulo);
         if(!c) return;
+
         const div = document.createElement("div");
         div.className="cancion";
 
         const tituloDiv = document.createElement("span");
         tituloDiv.textContent = c.titulo;
         tituloDiv.className="titulo";
-        tituloDiv.onclick = ()=> mostrarDetalle(c,"repertorio", repertorioActual);
+        tituloDiv.onclick = ()=> mostrarDetalle(c,"repertorio");
         div.appendChild(tituloDiv);
 
         const btnEliminar = document.createElement("button");
-        btnEliminar.textContent = "❌"; btnEliminar.className="eliminarCancion";
+        btnEliminar.textContent = "❌";
+        btnEliminar.className="eliminarCancion";
         btnEliminar.onclick = ()=>{
             repertorios[repertorioActual] = repertorios[repertorioActual].filter(x=>x!==c.titulo);
             guardarRepertorios();
             mostrarRepertorio();
         };
         div.appendChild(btnEliminar);
+
         repListaDiv.appendChild(div);
     });
 }
@@ -325,7 +325,9 @@ fetch(URL_JSON).then(r=>r.json()).then(data=>{
 document.getElementById("buscador").addEventListener("input", actualizarLista);
 actualizarSelectMisRepertorios();
 </script>
+
 </body>
 </html>
+
 
 
