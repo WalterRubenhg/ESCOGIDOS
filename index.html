@@ -170,6 +170,16 @@ function guardarRepertorios(){
     actualizarSelectMisRepertorios(); 
 }
 
+function actualizarSelectMisRepertorios(){
+    const sel = document.getElementById("selectMisRepertorios");
+    sel.innerHTML="";
+    for(let r in repertorios){
+        const opt = document.createElement("option");
+        opt.value=r; opt.textContent=r;
+        sel.appendChild(opt);
+    }
+}
+
 function actualizarLista(){
     const texto=document.getElementById("buscador").value.toLowerCase();
     listaFiltrada = canciones.filter(c=>c.titulo.toLowerCase().includes(texto) || c.letra.toLowerCase().includes(texto));
@@ -214,77 +224,55 @@ function mostrarDetalle(c, origen="principal"){
     document.getElementById("tituloCancion").textContent = c.titulo;
     document.getElementById("letraCancion").textContent = c.letra;
 
-    document.querySelectorAll(".tutorialBtn").forEach(btn=>{
-        btn.onclick=()=>{
-            const instr = btn.dataset.instrumento;
+    document.querySelectorAll(".tutorialBtn").forEach(btn => {
+        btn.onclick = () => {
             let url = "";
-            if(instr==="teclado") url=c.tutorial?.teclado||"";
-            else if(instr==="bateria") url=c.tutorial?.bateria||"";
-            else if(instr==="guitarra") url=c.tutorial?.guitarra||"";
-            else if(instr==="audio") url=c.audio||"";
-            if(url){ 
-                document.getElementById("iframeModal").src = url; 
+            switch(btn.dataset.instrumento){
+                case "teclado": url = c.tutorial?.teclado || ""; break;
+                case "bateria": url = c.tutorial?.bateria || ""; break;
+                case "guitarra": url = c.tutorial?.guitarra || ""; break;
+                case "audio": url = c.audio || ""; break;
+            }
+            if(url){
+                document.getElementById("iframeModal").src = url;
                 document.getElementById("modal").style.display = "block";
             }
         };
     });
 }
 
-document.getElementById("cerrarModal").onclick=()=>{
+document.getElementById("volver").onclick = ()=>{
+    detalleDiv.style.display="none";
+    if(origenDetalle==="repertorio") mostrarRepertorio();
+    else pantallaPrincipal.style.display="block";
+};
+
+document.getElementById("cerrarModal").onclick = ()=>{
     document.getElementById("iframeModal").src="";
     document.getElementById("modal").style.display="none";
-};
-
-document.getElementById("volver").onclick = () => {
-    detalleDiv.style.display = "none";
-    if(origenDetalle==="principal"){
-        pantallaPrincipal.style.display = "block";
-        actualizarLista();
-    } else if(origenDetalle==="repertorio"){
-        mostrarRepertorio();
-    }
-};
-
-document.getElementById("volverRepertorio").onclick = ()=>{
-    repertorioDiv.style.display="none"; pantallaPrincipal.style.display="block";
-};
-
-fetch(URL_JSON)
-.then(res=>res.json())
-.then(data=>{ canciones=data.canciones||[]; actualizarLista(); })
-.catch(()=>{ canciones=[]; actualizarLista(); });
-
-function actualizarSelectMisRepertorios(){
-    const select = document.getElementById("selectMisRepertorios");
-    select.innerHTML="";
-    for(let r in repertorios){
-        const opt = document.createElement("option");
-        opt.value = r; opt.textContent = r;
-        select.appendChild(opt);
-    }
-    if(select.options.length>0){
-        repertorioActual = select.value;
-        mostrarRepertorio();
-    }
-}
-
-document.getElementById("crearRepertorio").onclick = ()=>{
-    const nombre = document.getElementById("nuevoRepertorio").value.trim();
-    if(!nombre) return mostrarNotificacion("Ingrese un nombre de repertorio");
-    if(repertorios[nombre]) return mostrarNotificacion("Ya existe un repertorio con ese nombre");
-    repertorios[nombre]=[];
-    guardarRepertorios();
-    document.getElementById("nuevoRepertorio").value="";
-    mostrarNotificacion(`Repertorio "${nombre}" creado`);
-    actualizarSelectMisRepertorios();
 };
 
 document.getElementById("btnCrearRepertorio").onclick = ()=>{
     pantallaPrincipal.style.display="none"; repertorioDiv.style.display="block";
     document.getElementById("nuevoRepertorio").focus();
 };
+
 document.getElementById("btnVerRepertorios").onclick = ()=>{
     pantallaPrincipal.style.display="none"; repertorioDiv.style.display="block";
+};
+
+document.getElementById("crearRepertorio").onclick = ()=>{
+    const nombre = document.getElementById("nuevoRepertorio").value.trim();
+    if(!nombre) return mostrarNotificacion("Escribe un nombre");
+    if(repertorios[nombre]) return mostrarNotificacion("Ya existe un repertorio con ese nombre");
+    repertorios[nombre]=[];
+    guardarRepertorios();
+    document.getElementById("nuevoRepertorio").value="";
+    mostrarNotificacion(`Repertorio "${nombre}" creado`);
+};
+
+document.getElementById("volverRepertorio").onclick = ()=>{
+    repertorioDiv.style.display="none"; pantallaPrincipal.style.display="block";
 };
 
 function mostrarRepertorio(){
@@ -321,11 +309,23 @@ document.getElementById("selectMisRepertorios").onchange = ()=>{
     mostrarRepertorio();
 };
 
-actualizarSelectMisRepertorios();
-document.getElementById("buscador").addEventListener("input", actualizarLista);
+fetch(URL_JSON)
+.then(res=>res.json())
+.then(data=>{
+    canciones = data.canciones;
+    actualizarLista();
+})
+.catch(err=>{
+    console.error(err);
+    mostrarNotificacion("Error cargando canciones");
+});
 
+document.getElementById("buscador").addEventListener("input", actualizarLista);
+actualizarSelectMisRepertorios();
 </script>
+
 </body>
 </html>
+
 
 
