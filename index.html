@@ -4,26 +4,28 @@
 <meta charset="UTF-8">
 <title>Cancionero Web</title>
 <style>
+/* --- ESTILOS GENERALES --- */
 body {
     font-family: 'Arial', sans-serif;
     background: #000;
     color: #f5f5f5;
     margin: 0;
-    padding: 0;
+    padding-bottom: 50px;
     text-align: center;
 }
 
 h1 {
-    color: #ffa500;
+    color: #ffa500; /* naranja dorado */
     margin: 20px 0;
     font-size: 2rem;
 }
 
-#buscador {
+/* --- INPUTS --- */
+#buscador, #nuevoRepertorio {
+    margin: 10px auto;
+    padding: 10px;
     width: 90%;
     max-width: 500px;
-    padding: 10px;
-    margin: 10px auto;
     font-size: 16px;
     border-radius: 8px;
     border: 1px solid #ffa500;
@@ -31,6 +33,7 @@ h1 {
     color: #f5f5f5;
 }
 
+/* --- CANCIONES --- */
 .cancion {
     background: #111;
     margin: 10px auto;
@@ -43,7 +46,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 10px rgba(255,165,0,0.3);
-    transition: 0.3s;
+    transition: all 0.3s;
 }
 
 .cancion:hover {
@@ -58,6 +61,7 @@ h1 {
     text-align: left;
 }
 
+/* --- LETRA --- */
 .letra {
     white-space: pre-wrap;
     font-weight: bold;
@@ -67,6 +71,7 @@ h1 {
     text-align: center;
 }
 
+/* --- BOTONES --- */
 button {
     background: #ffa500;
     color: #000;
@@ -83,7 +88,8 @@ button:hover {
     background: #ffbf00;
 }
 
-.selectRepertorio, #nuevoRepertorio {
+/* --- SELECTS --- */
+select {
     padding: 8px;
     margin: 5px;
     border-radius: 8px;
@@ -92,6 +98,7 @@ button:hover {
     color: #f5f5f5;
 }
 
+/* --- NOTIFICACIONES --- */
 #notificacion {
     display: none;
     padding: 10px;
@@ -103,7 +110,7 @@ button:hover {
     box-shadow: 0 3px 6px rgba(255,165,0,0.3);
 }
 
-/* Modal */
+/* --- MODAL --- */
 .modal {
     display: none;
     position: fixed;
@@ -145,7 +152,7 @@ button:hover {
     color: #ffbf00;
 }
 
-/* Responsive */
+/* --- RESPONSIVE --- */
 @media (max-width: 600px){
     .letra { font-size: 1rem; }
     button, select, input { width: 80%; margin: 5px auto; }
@@ -158,6 +165,7 @@ button:hover {
 <h1>📖 Cancionero Web</h1>
 <div id="notificacion"></div>
 
+<!-- --- PANTALLA PRINCIPAL --- -->
 <div id="pantallaPrincipal">
     <input type="text" id="buscador" placeholder="🔎 Buscar canción...">
     <div id="lista"></div>
@@ -168,7 +176,8 @@ button:hover {
     </div>
 </div>
 
-<div id="detalle">
+<!-- --- DETALLE CANCION --- -->
+<div id="detalle" style="display:none;">
     <h2 id="tituloCancion"></h2>
     <div>
         <button class="tutorialBtn" data-instrumento="teclado">Teclado</button>
@@ -180,15 +189,17 @@ button:hover {
     <button id="volver">⬅ Volver</button>
 </div>
 
-<div id="repertorio">
+<!-- --- REPERTORIO --- -->
+<div id="repertorio" style="display:none;">
     <h2>Repertorios</h2>
     <input type="text" id="nuevoRepertorio" placeholder="Nombre del nuevo repertorio">
     <button id="crearRepertorio">Crear</button>
-    <select id="selectMisRepertorios" class="selectRepertorio"></select>
+    <select id="selectMisRepertorios"></select>
     <div id="repertorioLista"></div>
     <button id="volverRepertorio">⬅ Volver</button>
 </div>
 
+<!-- --- MODAL --- -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <span class="closeModal" id="cerrarModal">&times;</span>
@@ -229,6 +240,7 @@ function actualizarLista(){
         span.onclick=()=>mostrarDetalle(c,"principal");
         div.appendChild(span);
 
+        // Select para agregar a repertorio
         const selectRep=document.createElement("select");
         const defaultOpt=document.createElement("option"); defaultOpt.value=""; defaultOpt.textContent="+ Repertorio";
         selectRep.appendChild(defaultOpt);
@@ -263,9 +275,7 @@ function mostrarDetalle(c, origen){
     const modal=document.getElementById("modal");
     document.querySelectorAll(".tutorialBtn").forEach(btn=>{
         const instr=btn.dataset.instrumento;
-        btn.onclick=()=>{
-            iframe.src=(instr==="audio"?c.audio:c.tutorial[instr]||""); modal.style.display="block";
-        };
+        btn.onclick=()=>{ iframe.src=(instr==="audio"?c.audio:c.tutorial[instr]||""); modal.style.display="block"; };
     });
 }
 
@@ -338,7 +348,6 @@ document.getElementById("selectMisRepertorios").onchange=(e)=>mostrarRepertorio(
 // Modal cerrar
 document.getElementById("cerrarModal").onclick=()=>{ document.getElementById("modal").style.display="none"; document.getElementById("iframeModal").src=""; };
 window.onclick=(e)=>{ if(e.target===document.getElementById("modal")){ document.getElementById("modal").style.display="none"; document.getElementById("iframeModal").src=""; } };
-
 </script>
 </body>
 </html>
