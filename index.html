@@ -73,9 +73,7 @@ button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(255, 165, 0, 0.6);
 }
-.eliminarCancion {
-    background: #ff4500;
-}
+.eliminarCancion { background: #ff4500; }
 .eliminarCancion:hover { background:#ff6347; }
 #repertorioLista {
     background: #222;
@@ -219,6 +217,7 @@ function actualizarLista(){
 function mostrarDetalle(c, origen){
     if(!c) return;
     origenDetalle = origen || "principal";
+
     detalleDiv.style.display="block";
     pantallaPrincipal.style.display="none";
     repertorioDiv.style.display="none";
@@ -232,8 +231,9 @@ function mostrarDetalle(c, origen){
     botones.forEach(btn => {
         const instr = btn.dataset.instrumento;
         btn.onclick = ()=>{
-            iframe.src = c.tutorial?.[instr] || (instr==="audio"?c.audio:"");
-            modal.style.display="block";
+            const url = c.tutorial?.[instr] || (instr==="audio" ? c.audio : "");
+            if(!url) { mostrarNotificacion("Tutorial o audio no disponible."); return; }
+            iframe.src = url; modal.style.display="block";
         };
     });
 }
@@ -282,12 +282,9 @@ document.getElementById("volverRepertorio").onclick = ()=>{
 function mostrarRepertorio(){
     if(!repertorioActual) return;
     repertorioDiv.style.display="block"; pantallaPrincipal.style.display="none";
-    const sel = document.getElementById("selectMisRepertorios");
-    sel.value = repertorioActual;
-
+    document.getElementById("selectMisRepertorios").value = repertorioActual;
     const repListaDiv = document.getElementById("repertorioLista");
     repListaDiv.innerHTML = "";
-
     if(!repertorios[repertorioActual]) repertorios[repertorioActual]=[];
 
     repertorios[repertorioActual].forEach(titulo=>{
@@ -300,15 +297,11 @@ function mostrarRepertorio(){
         const tituloDiv = document.createElement("span");
         tituloDiv.textContent = c.titulo;
         tituloDiv.className="titulo";
-        tituloDiv.onclick = ()=>{
-            const cancion = canciones.find(x => x.titulo === c.titulo);
-            mostrarDetalle(cancion, "repertorio");
-        };
+        tituloDiv.onclick = ()=> mostrarDetalle(c, "repertorio");
         div.appendChild(tituloDiv);
 
         const btnEliminar = document.createElement("button");
-        btnEliminar.textContent = "❌";
-        btnEliminar.className="eliminarCancion";
+        btnEliminar.textContent = "❌"; btnEliminar.className="eliminarCancion";
         btnEliminar.onclick = ()=>{
             repertorios[repertorioActual] = repertorios[repertorioActual].filter(x=>x!==c.titulo);
             guardarRepertorios();
