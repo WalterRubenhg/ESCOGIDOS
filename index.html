@@ -349,6 +349,14 @@ document.getElementById("selectMisRepertorios").onchange=(e)=>mostrarRepertorio(
 document.getElementById("cerrarModal").onclick=()=>{ document.getElementById("modal").style.display="none"; document.getElementById("iframeModal").src=""; };
 window.onclick=(e)=>{ if(e.target===document.getElementById("modal")){ document.getElementById("modal").style.display="none"; document.getElementById("iframeModal").src=""; } };
 </script>
+<script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registrado"))
+        .catch(err => console.log("Error SW:", err));
+    }
+    </script>
+    
 </body>
 </html>
 

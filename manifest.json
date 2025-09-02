@@ -1,0 +1,21 @@
+{
+    "name": "EPAS",
+    "short_name": "EPAS",
+    "start_url": "/EPAS/index.html",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#e67e22",
+    "icons": [
+      {
+        "src": "icono-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "icono-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
