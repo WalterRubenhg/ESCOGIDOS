@@ -4,21 +4,116 @@
 <meta charset="UTF-8">
 <title>Cancionero Web</title>
 <style>
-body { font-family: 'Arial', sans-serif; text-align:center; background:#f5f5f5; margin:0; padding-bottom:50px; }
-h1 { color:#2c3e50; margin:20px; font-size:2rem; }
-#buscador { margin:10px auto; padding:10px; width:90%; max-width:500px; font-size:16px; border-radius:8px; border:1px solid #ccc; }
-.cancion { background:white; margin:10px auto; padding:15px; border-radius:10px; width:90%; max-width:500px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:0.3s; display:flex; justify-content:space-between; align-items:center; }
-.cancion:hover { background:#eaf4ff; transform: translateY(-2px);}
-.titulo { font-size:1.2rem; font-weight:bold; color:#2980b9; cursor:pointer; }
-.letra { white-space: pre-wrap; font-weight:bold; font-size:1.1rem; line-height:1.6; text-align:center; margin-top:20px; }
-#detalle, #repertorio { display:none; padding:20px; }
-button { margin-top:10px; padding:10px 20px; border:none; border-radius:10px; cursor:pointer; background:#2980b9; color:white; transition:0.3s;}
-button:hover { background:#1a5f91; }
-.eliminarCancion { background:#e74c3c; margin-left:10px; }
-.eliminarCancion:hover { background:#c0392b; }
-#repertorioLista, #lista { margin-top:15px; text-align:left; max-width:90%; margin-left:auto; margin-right:auto;}
-.notificacion { background:#27ae60; color:white; padding:10px; border-radius:8px; margin:10px auto; width:90%; max-width:400px; display:none; box-shadow:0 3px 6px rgba(0,0,0,0.1);}
-input, select { padding:8px 10px; border-radius:6px; border:1px solid #ccc; margin:5px;}
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background: #111; /* Negro de fondo */
+    color: #ffd700;   /* Dorado para textos principales */
+    margin: 0;
+    padding-bottom: 50px;
+}
+h1 {
+    color: #ffa500;  /* Naranja */
+    font-size: 2.5rem;
+    margin: 20px;
+    text-shadow: 2px 2px #000;
+}
+#buscador {
+    margin: 10px auto;
+    padding: 10px;
+    width: 90%;
+    max-width: 500px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ffd700;
+    background: #222;
+    color: #ffd700;
+}
+.cancion {
+    background: #1a1a1a; /* Negro oscuro */
+    color: #ffd700;       /* Dorado */
+    margin: 10px auto;
+    padding: 15px 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(255, 165, 0, 0.3);
+    border: 2px solid #ffd700;
+    transition: transform 0.3s, background 0.3s;
+}
+.cancion:hover {
+    background: #ffa500;  /* Naranja */
+    color: #111;           /* Texto negro sobre naranja */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 165, 0, 0.5);
+}
+.titulo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.letra {
+    white-space: pre-wrap;
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    text-align: center;
+    margin-top: 20px;
+}
+#detalle, #repertorio { display: none; padding: 20px; }
+button {
+    margin-top: 10px;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background: #ffa500; /* Naranja */
+    color: #111;         /* Negro */
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+}
+button:hover {
+    background: #ffd700; /* Dorado */
+    color: #111;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 165, 0, 0.6);
+}
+.eliminarCancion {
+    background: #ff4500; /* Rojo anaranjado */
+}
+.eliminarCancion:hover {
+    background: #ff6347;
+}
+#repertorioLista {
+    background: #222;   /* Negro suave */
+    color: #ffd700;     /* Dorado */
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(255, 165, 0, 0.3);
+}
+.notificacion {
+    background:#ff6f00;
+    color:white;
+    padding:10px;
+    border-radius:8px;
+    margin:10px auto;
+    width:90%;
+    max-width:400px;
+    display:none;
+    box-shadow:0 3px 6px rgba(0,0,0,0.1);
+}
+input, select { padding:8px 10px; border-radius:6px; border:1px solid #ffd700; background:#222; color:#ffd700; margin:5px;}
+.modal { display:none; position:fixed; z-index:999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.8);}
+.modal-content { background-color:#1a1a1a; margin:10% auto; padding:0; border-radius:10px; width:90%; max-width:800px; position:relative;}
+.modal iframe { width:100%; height:400px; border:none; border-radius:10px 10px 0 0; }
+.close { color:white; position:absolute; top:10px; right:20px; font-size:30px; font-weight:bold; cursor:pointer; }
+.close:hover { color:#ffa500; }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -58,10 +153,10 @@ input, select { padding:8px 10px; border-radius:6px; border:1px solid #ccc; marg
   <button id="volverRepertorio">⬅ Volver</button>
 </div>
 
-<div id="modal" class="modal" style="display:none; position:fixed; z-index:999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.7);">
-    <div style="background-color:#fefefe; margin:10% auto; padding:0; border-radius:10px; width:90%; max-width:800px; position:relative;">
-        <span id="cerrarModal" style="color:white; position:absolute; top:10px; right:20px; font-size:30px; font-weight:bold; cursor:pointer;">&times;</span>
-        <iframe id="iframeModal" allow="autoplay; encrypted-media" allowfullscreen style="width:100%; height:400px; border:none; border-radius:10px 10px 0 0;"></iframe>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span id="cerrarModal" class="close">&times;</span>
+        <iframe id="iframeModal" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 </div>
 
@@ -169,7 +264,6 @@ document.getElementById("volver").onclick = () => {
 
 document.getElementById("volverRepertorio").onclick = ()=>{
     repertorioDiv.style.display="none"; pantallaPrincipal.style.display="block";
-    actualizarLista();
 };
 
 // --- Cargar canciones ---
@@ -183,52 +277,60 @@ function actualizarSelectMisRepertorios(){
     const select = document.getElementById("selectMisRepertorios");
     select.innerHTML="";
     for(let r in repertorios){
-        const opt=document.createElement("option"); opt.value=r; opt.textContent=r; select.appendChild(opt);
+        const opt = document.createElement("option");
+        opt.value = r; opt.textContent = r;
+        select.appendChild(opt);
     }
-    repertorioActual = select.value || null;
-    mostrarRepertorio();
-    select.onchange=()=>{ repertorioActual=select.value; mostrarRepertorio(); };
 }
-
-function mostrarRepertorio(){
-    listaDiv.innerHTML=""; pantallaPrincipal.style.display="none"; detalleDiv.style.display="none"; repertorioDiv.style.display="block";
-    const cont=document.getElementById("repertorioLista"); cont.innerHTML="";
-    if(!repertorioActual) { cont.innerHTML="Selecciona un repertorio"; return;}
-    repertorios[repertorioActual].forEach((titulo,i)=>{
-        const div=document.createElement("div"); div.className="cancion"; 
-        const tituloSpan = document.createElement("span"); tituloSpan.textContent = titulo; tituloSpan.className="titulo";
-        tituloSpan.onclick=()=>{ const c = canciones.find(x=>x.titulo===titulo); if(c) mostrarDetalle(c,"repertorio"); };
-        div.appendChild(tituloSpan);
-
-        const btnEliminar = document.createElement("button"); btnEliminar.textContent="❌"; btnEliminar.className="eliminarCancion";
-        btnEliminar.onclick=()=>{
-            repertorios[repertorioActual] = repertorios[repertorioActual].filter(t=>t!==titulo);
-            guardarRepertorios();
-            mostrarRepertorio();
-            mostrarNotificacion(`"${titulo}" eliminado de ${repertorioActual}`);
-        };
-        div.appendChild(btnEliminar);
-
-        cont.appendChild(div);
-    });
-}
-
-// --- Crear repertorio ---
-document.getElementById("crearRepertorio").onclick=()=>{
-    const nombre=document.getElementById("nuevoRepertorio").value.trim();
-    if(!nombre) return mostrarNotificacion("Escribe un nombre de repertorio");
-    if(repertorios[nombre]) return mostrarNotificacion("Ese repertorio ya existe");
-    repertorios[nombre]=[]; guardarRepertorios(); document.getElementById("nuevoRepertorio").value="";
+document.getElementById("crearRepertorio").onclick = ()=>{
+    const nombre = document.getElementById("nuevoRepertorio").value.trim();
+    if(!nombre) return mostrarNotificacion("Ingrese un nombre de repertorio");
+    if(repertorios[nombre]) return mostrarNotificacion("Ya existe un repertorio con ese nombre");
+    repertorios[nombre] = [];
+    guardarRepertorios();
+    document.getElementById("nuevoRepertorio").value="";
     mostrarNotificacion(`Repertorio "${nombre}" creado`);
 };
-
-// --- Botones principales ---
-document.getElementById("btnCrearRepertorio").onclick=()=>{ repertorioDiv.style.display="block"; pantallaPrincipal.style.display="none"; };
-document.getElementById("btnVerRepertorios").onclick=()=>{
-    actualizarSelectMisRepertorios(); repertorioDiv.style.display="block"; pantallaPrincipal.style.display="none";
+document.getElementById("btnCrearRepertorio").onclick = ()=>{
+    pantallaPrincipal.style.display="none"; repertorioDiv.style.display="block";
+    document.getElementById("nuevoRepertorio").focus();
+};
+document.getElementById("btnVerRepertorios").onclick = ()=>{
+    pantallaPrincipal.style.display="none"; repertorioDiv.style.display="block";
 };
 
-document.getElementById("buscador").addEventListener("input", actualizarLista);
+function mostrarRepertorio(){
+    repertorioDiv.style.display="block";
+    listaDiv.innerHTML="";
+    const select = document.getElementById("selectMisRepertorios");
+    repertorioActual = select.value;
+    const repListaDiv = document.getElementById("repertorioLista");
+    repListaDiv.innerHTML="";
+    if(!repertorios[repertorioActual]) return;
+    repertorios[repertorioActual].forEach(titulo=>{
+        const c = canciones.find(x=>x.titulo===titulo);
+        if(!c) return;
+        const div = document.createElement("div");
+        div.className="cancion";
+
+        const tituloDiv = document.createElement("span");
+        tituloDiv.textContent = c.titulo; tituloDiv.className="titulo";
+        tituloDiv.onclick=()=>mostrarDetalle(c,"repertorio");
+        div.appendChild(tituloDiv);
+
+        const btnEliminar = document.createElement("button");
+        btnEliminar.textContent="❌"; btnEliminar.className="eliminarCancion";
+        btnEliminar.onclick=()=>{
+            repertorios[repertorioActual] = repertorios[repertorioActual].filter(x=>x!==c.titulo);
+            guardarRepertorios();
+            mostrarRepertorio();
+        };
+        div.appendChild(btnEliminar);
+        repListaDiv.appendChild(div);
+    });
+}
+document.getElementById("selectMisRepertorios").onchange = mostrarRepertorio;
+actualizarSelectMisRepertorios();
 </script>
 </body>
 </html>
