@@ -217,18 +217,19 @@ function actualizarLista(){
 }
 
 function mostrarDetalle(c, origen){
-    origenDetalle = origen;
+    if(!c) return;
+    origenDetalle = origen || "principal";
     detalleDiv.style.display="block";
     pantallaPrincipal.style.display="none";
     repertorioDiv.style.display="none";
 
     document.getElementById("tituloCancion").textContent = c.titulo;
-    document.getElementById("letraCancion").textContent = c.letra;
+    document.getElementById("letraCancion").textContent = c.letra || "No hay letra disponible.";
 
     const iframe = document.getElementById("iframeModal");
     const modal = document.getElementById("modal");
     const botones = document.querySelectorAll(".tutorialBtn");
-    botones.forEach(btn=>{
+    botones.forEach(btn => {
         const instr = btn.dataset.instrumento;
         btn.onclick = ()=>{
             iframe.src = c.tutorial?.[instr] || (instr==="audio"?c.audio:"");
@@ -237,7 +238,7 @@ function mostrarDetalle(c, origen){
     });
 }
 
-document.getElementById("cerrarModal").onclick = ()=>{ 
+document.getElementById("cerrarModal").onclick = ()=>{
     document.getElementById("iframeModal").src="";
     document.getElementById("modal").style.display="none";
 };
@@ -299,7 +300,10 @@ function mostrarRepertorio(){
         const tituloDiv = document.createElement("span");
         tituloDiv.textContent = c.titulo;
         tituloDiv.className="titulo";
-        tituloDiv.onclick = ()=> mostrarDetalle(c,"repertorio");
+        tituloDiv.onclick = ()=>{
+            const cancion = canciones.find(x => x.titulo === c.titulo);
+            mostrarDetalle(cancion, "repertorio");
+        };
         div.appendChild(tituloDiv);
 
         const btnEliminar = document.createElement("button");
@@ -316,7 +320,6 @@ function mostrarRepertorio(){
     });
 }
 
-// Cargar canciones desde JSON
 fetch(URL_JSON).then(r=>r.json()).then(data=>{
     canciones = data.canciones || [];
     actualizarLista();
